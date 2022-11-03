@@ -1,0 +1,57 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Sounds/bgmidea2.wav" type="AudioStream" id=1]
+[ext_resource path="res://Sounds/No Hope.wav" type="AudioStream" id=2]
+[ext_resource path="res://Scenes N Scripts/Game.gd" type="Script" id=3]
+[ext_resource path="res://Scenes N Scripts/Enemy.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes N Scripts/Player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes N Scripts/UI.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Graphics/background1.png" type="Texture" id=7]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -1.11618, 2.29975, 0, 0, 0, 0, 1313.44, 0.867783, 0, 0, 0, 0, 1314.87, 618.048, 0, 0, 0, 0, 0.315796, 618.048, 0, 0, 0, 0, -1.11618, 2.29975, 0, 0, 0, 0, -1.11618, 2.29975 )
+}
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 659.179, 308.72 )
+scale = Vector2( 0.4, 0.45 )
+texture = ExtResource( 7 )
+
+[node name="Enemo" parent="." instance=ExtResource( 4 )]
+position = Vector2( -36.6033, 11.698 )
+
+[node name="Player" parent="." instance=ExtResource( 5 )]
+
+[node name="EnemyTimer" type="Timer" parent="."]
+wait_time = 0.25
+
+[node name="EnemyPath" type="Path2D" parent="."]
+position = Vector2( 1.39673, -2.09497 )
+curve = SubResource( 1 )
+
+[node name="EnemySpawn" type="PathFollow2D" parent="EnemyPath"]
+position = Vector2( -1.11618, 2.29975 )
+rotation = -0.0010894
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="UI" parent="." instance=ExtResource( 6 )]
+
+[node name="GameOver" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+[connection signal="hit" from="Player" to="." method="_on_Player_hit"]
+[connection signal="timeout" from="EnemyTimer" to="." method="_on_EnemyTimer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_ScoreTimer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_StartTimer_timeout"]
+[connection signal="startGame" from="UI" to="." method="_on_UI_startGame"]
